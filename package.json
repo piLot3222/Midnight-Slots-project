@@ -1,0 +1,15 @@
+{
+  "name": "secure-slots",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Защищённая версия Web Security Testbed: серверная авторизация и игровая логика, без внешних зависимостей",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a090b">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Midnight Slots</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body data-auth="checking">
+  <div class="scanlines" aria-hidden="true"></div>
+  <div class="cherry-field" aria-hidden="true"></div>
+  <div class="win-flames" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Midnight Slots">
+      <img class="brand-logo" src="/logo.png" alt="Midnight Slots">
+    </a>
+    <div class="topbar-status"><span class="status-light"></span> зал открыт</div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero">
+      <div class="hero-copy-block">
+        <p class="section-kicker">/ локальный игровой зал</p>
+        <h1>Собери<br><em>тройку.</em></h1>
+        <p class="hero-copy">Три барабана, один физический контроллер и сервер, который решает результат.</p>
+      </div>
+      <div class="hero-aside">
+        <span class="hero-code">MS-07 / LIVE</span>
+        <p>Нажмите кнопку на сайте<br>или на вашей ESP32.</p>
+      </div>
+    </section>
+
+    <section class="category-strip" aria-label="Разделы зала">
+      <a class="category-card" href="/machine">
+        <span class="category-index">01</span>
+        <strong>Автомат</strong>
+        <small>Запустить барабаны</small>
+      </a>
+      <a class="category-card" href="/profile">
+        <span class="category-index">02</span>
+        <strong>Профиль</strong>
+        <small>Баланс и сессия</small>
+      </a>
+      <a class="category-card" href="/leaderboard">
+        <span class="category-index">03</span>
+        <strong>Рейтинг</strong>
+        <small>Топ игроков</small>
+      </a>
+      <a class="category-card" href="/controller">
+        <span class="category-index">04</span>
+        <strong>Контроллер</strong>
+        <small>Подключить ESP32</small>
+      </a>
+    </section>
+
+    <div class="dashboard-grid">
+      <section class="machine-card" id="machine">
+        <div class="machine-head">
+          <div>
+            <p class="section-kicker">/ главный автомат</p>
+            <h2>Три попытки.<br>Один шанс.</h2>
+          </div>
+          <div class="cost-badge"><span id="spin-cost">−10</span><small>монет<br>за спин</small></div>
+        </div>
+
+        <div class="slots-panel" aria-live="polite" aria-label="Барабаны слотов">
+          <span class="slots-label">MIDNIGHT / 777</span>
+          <div class="slot-window"><div class="slot-box" id="s1">7</div></div>
+          <div class="slot-divider">×</div>
+          <div class="slot-window"><div class="slot-box" id="s2">7</div></div>
+          <div class="slot-divider">×</div>
+          <div class="slot-window"><div class="slot-box" id="s3">7</div></div>
+        </div>
+
+        <button id="action-btn" class="spin-button" type="button" disabled>
+          Войдите, чтобы играть
+        </button>
+        <div id="status-msg" role="status" aria-live="polite"></div>
+
+      </section>
+
+      <section class="controller-card panel" id="device-section" aria-label="Подключение контроллера">
+        <div class="panel-title"><span>Контроллер ESP32</span><span class="panel-icon">⌁</span></div>
+        <p class="panel-subtitle">Подключите плату, чтобы запускать спин физической кнопкой.</p>
+        <div class="device-controls" id="device">
+          <button id="serial-connect-btn" type="button" class="device-button">Подключить ESP32</button>
+          <span id="serial-status" role="status" aria-live="polite">ESP32 не подключена</span>
+        </div>
+      </section>
+
+      <aside class="side-column">
+        <section class="panel auth-panel" id="profile" aria-label="Профиль">
+          <div class="panel-title"><span>/ ваш профиль</span><span class="panel-icon">↗</span></div>
+          <form id="login-form">
+            <div class="fields">
+              <input type="text" id="user-input" name="username" placeholder="Имя пользователя" autocomplete="username" maxlength="20" required>
+              <input type="password" id="pass-input" name="password" placeholder="Пароль" autocomplete="current-password" maxlength="128" required>
+            </div>
+            <div class="auth-buttons">
+              <button type="submit" id="login-btn">Войти</button>
+              <button type="button" id="register-btn" class="secondary">Регистрация</button>
+            </div>
+            <p class="hint">Латиница, цифры и _ · от 3 символов</p>
+          </form>
+          <div id="session-info" class="session-info" hidden>
+            <div class="avatar" id="avatar-letter">?</div>
+            <div><strong id="session-username"></strong><span id="session-role" class="role-indicator"></span></div>
+            <button type="button" id="logout-btn" class="link">Выйти</button>
+          </div>
+          <div class="balance-row"><span>Баланс</span><strong><b id="account-balance">—</b> <small>монет</small></strong></div>
+        </section>
+
+        <section class="panel leaderboard-panel" id="leaderboard-section">
+          <div class="panel-title"><span>/ лидеры зала</span><span class="panel-icon">♛</span></div>
+          <p class="panel-subtitle">Топ игроков по монетам</p>
+          <div id="leaderboard" class="leaderboard" aria-live="polite"><div class="leaderboard-empty">Загрузка рейтинга…</div></div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="debug-panel" id="debug-zone" hidden aria-label="Панель администратора">
+      <div><p class="section-kicker">/ режим администратора</p><h3>Управление залом</h3></div>
+      <div class="admin-actions">
+        <button type="button" class="debug-btn" id="adm-plus">+2000 монет</button>
+        <button type="button" class="debug-btn" id="adm-minus">−2000 монет</button>
+        <button type="button" class="debug-btn" id="adm-jackpot">Активировать джекпот</button>
+        <button type="button" class="debug-btn" id="adm-next-jackpot">Следующий спин выигрышный</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="pixel-break" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  </footer>
+</body>
+</html>
